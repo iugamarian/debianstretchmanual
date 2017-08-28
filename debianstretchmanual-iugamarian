@@ -37,5 +37,16 @@ exit
 # Save all buffers to disk:
 sync
 
+#### W A R N I N G S ! ! !
+
+---in vi or vim doing a right click and paste makes TAB's be incorrect so on OpenWRT over ssh
+    you brick the router and need to connect to serial interface to unbrick - issue a "mtd erase rootfs_data"
+    https://forum.openwrt.org/viewtopic.php?id=25421
+    Solution: use "nano" or "cat ... EOF" to paste in terminal, through ssh
+    
+---"unrar" is non-free, so on Raspbian Stretch you only have the source from non-free, no binary
+    Solution: install free "unar", it is intergated in graphical archivers, works as best as "unrar"
+    Yes, without the r in it's name.
+
 
 #### TODO
