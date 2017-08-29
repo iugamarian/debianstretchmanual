@@ -48,5 +48,12 @@ sync
     Solution: install free "unar", it is intergated in graphical archivers, works as best as "unrar"
     Yes, without the r in it's name.
 
+---when a full screen graphical application hangs, you can't do anything on the computer
+    Solution: 1) press computer's the power button for a short time, then cancel, then kill application from System Monitor
+              2) CTRL+ALT+F1 through CTRL+ALT+F6 login as root or as user, you can issue commands, best one would be reboot
+                 You can return to the graphical desktop with ALT+F7 or CTRL+ALT+F7. When in text mode just ALT needed,
+                 in grapgical mode CTRL+ALT is mandatory. If you know the name of the hanged application you can kill it
+                 by doing textually "killall application", already available on Debian Stretch from the "psmisc" package
+
 
 #### TODO
