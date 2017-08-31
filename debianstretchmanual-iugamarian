@@ -55,5 +55,23 @@ sync
                  in grapgical mode CTRL+ALT is mandatory. If you know the name of the hanged application you can kill it
                  by doing textually "killall application", already available on Debian Stretch from the "psmisc" package
 
+---Linux hangs when a (usually erronated) process asks for more memory than the computer has
+    Solution: In a .conf file in /etc/sysctl.d write (swap more, 32MB only for kernel, less file data in RAM):
+        vm.swappiness = 60
+        vm.min_free_kbytes = 32768
+        vm.vfs_cache_pressure = 300
+
+---on a computer power outage you can lose unwritten data and there is a lot of it by default
+    Solution: In a .conf file in /etc/sysctl.d write (max buffer 128 MB, write all that's older than 6 seconds):
+        vm.dirty_bytes = 134217728
+        vm.dirty_background_bytes = 134217728
+        vm.dirty_writeback_centisecs = 600
+        vm.dirty_expire_centisecs = 600
+
+---apt or web browser hangs on the internet for IPV6 addresses, this means the ISP does not allow them
+     Solution: In a .conf file in /etc/sysctl.d write (disable ipv6):
+        net.ipv6.conf.all.disable_ipv6 = 1
+        net.ipv6.conf.default.disable_ipv6 = 1
+ 
 
 #### TODO
