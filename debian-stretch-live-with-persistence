@@ -22,7 +22,9 @@ fi
 
 echo "unmounting old partitions"
 umount ${dev}*
-
+sleep 1
+dd if=/dev/zero of=${dev} bs=1M count=16 iflag=fullblock
+sleep 1
 echo "creating partitions"
 parted ${dev} --script mklabel gpt
 parted ${dev} --script mkpart EFI fat16 1MiB 10MiB
@@ -35,7 +37,7 @@ parted ${dev} --script set 2 msftdata on
 echo "syncing and probing new paritions"
 sync
 partprobe
-
+sleep 1
 echo "creating file systems"
 mkfs.vfat -n EFI ${dev}1
 mkfs.vfat -n LIVE ${dev}2
