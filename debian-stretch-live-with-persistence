@@ -24,7 +24,7 @@ echo "unmounting old partitions"
 umount ${dev}*
 
 echo "creating partitions"
-parted ${dev} --script mklabel gpt
+parted ${dev} --script mktable gpt
 parted ${dev} --script mkpart EFI fat16 1MiB 10MiB
 parted ${dev} --script mkpart live fat16 10MiB 3GiB
 parted ${dev} --script mkpart persistence ext4 3GiB 100%
