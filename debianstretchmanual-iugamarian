@@ -37,6 +37,15 @@ exit
 # Save all buffers to disk:
 sync
 
+#### Debian Stretch Live with persistence
+
+See here included file debian-stretch-live-with-persistence for EFI and
+debian-stretch-live-with-persistence-for-old-laptop for no EFI, old BIOS.
+This manual explains persistence:
+
+http://debian-live.alioth.debian.org/live-manual/stable/manual/html/live-manual.en.html
+
+
 #### W A R N I N G S ! ! !
 
 ---in vi or vim doing a right click and paste makes TAB's be incorrect so on OpenWRT over ssh
@@ -69,9 +78,13 @@ sync
         vm.dirty_expire_centisecs = 600
 
 ---apt or web browser hangs on the internet for IPV6 addresses, this means the ISP does not allow them
-     Solution: In a .conf file in /etc/sysctl.d write (disable ipv6):
+    Solution: In a .conf file in /etc/sysctl.d write (disable ipv6):
         net.ipv6.conf.all.disable_ipv6 = 1
         net.ipv6.conf.default.disable_ipv6 = 1
  
+ ---web browser does not refresh properly, keeps old page when F5 is pressed
+    Solution: Press CTRL+F5 or with browser closed delete from home folder: .mozilla and .cache/mozilla
+        To see hidden .files in most graphical file managers press CTRL+H and press again to deactivate.
+
 
 #### TODO
