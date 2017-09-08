@@ -1,3 +1,15 @@
+#### Connect to wifi using only terminal
+
+# Taken from here:
+#https://askubuntu.com/questions/833905/how-can-i-connect-to-a-specific-bssid
+
+# Show wireless netwarks with quality bars:
+nmcli -f in-use,ssid,bssid,signal,bars  dev wifi
+# Connect to the shown bssid XX:XX:XX:XX:XX:XX :
+nmcli d wifi connect XX:XX:XX:XX:XX:XX password "mypassword"
+# Security concern - password remains in .bash_history
+
+
 #### Software Raid with mdadm
 
 https://wiki.debian.org/SoftwareRAID
