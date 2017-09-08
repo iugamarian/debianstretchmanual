@@ -3,11 +3,13 @@
 # Taken from here:
 #https://askubuntu.com/questions/833905/how-can-i-connect-to-a-specific-bssid
 
-# Show wireless netwarks with quality bars:
+# Show wireless networks with quality bars:
 nmcli -f in-use,ssid,bssid,signal,bars  dev wifi
-# Connect to the shown bssid XX:XX:XX:XX:XX:XX :
+# Connect to one of the indicated bssid XX:XX:XX:XX:XX:XX :
 nmcli d wifi connect XX:XX:XX:XX:XX:XX password "mypassword"
 # Security concern - password remains in .bash_history
+
+# Or use nmtui for ncurses menu access to Network Manager
 
 
 #### Software Raid with mdadm
