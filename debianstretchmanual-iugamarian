@@ -1,6 +1,12 @@
 #### Run Windows programs
 
-https://wiki.debian.org/Wine
+# Taken from here
+#https://wiki.debian.org/Wine
+
+dpkg --add-architecture i386 && sudo apt update
+apt install -y wine-development wine32-development wine64-development libwine-development libwine-development:i386 fonts-wine
+# Quake 4 Demo works very well on amdgpu AMD RX480, no WIN32 prefix required,
+# no extra dll's or configurations required except winecfg -> select Windows 7
 
 
 #### Connect to wifi using only terminal
