@@ -83,6 +83,11 @@ sed --in-place 's#isolinux/splash#syslinux/splash#' ${tmplive}/boot/grub/grub.cf
 echo "configuring persistence kernel parameter"
 sed --in-place '0,/boot=live/{s/\(boot=live .*\)$/\1 persistence/}' ${tmplive}/boot/grub/grub.cfg ${tmplive}/syslinux/menu.cfg
 
+echo "setting timeout of 5 seconds"
+echo "" >> ${tmplive}/boot/grub/grub.cfg
+echo "set timeout=5" >> ${tmplive}/boot/grub/grub.cfg
+echo "" >> ${tmplive}/boot/grub/grub.cfg
+
 echo "configuring keyboard layout and locales"
 # http://debian-live.alioth.debian.org/live-manual/stable/manual/html/live-manual.en.html
 # egrep -i '(^!|english)' /usr/share/X11/xkb/rules/base.lst
