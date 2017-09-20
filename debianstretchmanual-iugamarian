@@ -1,7 +1,8 @@
+
 #### Run Windows programs
 
 # Taken from here
-#https://wiki.debian.org/Wine
+# https://wiki.debian.org/Wine
 
 dpkg --add-architecture i386 && sudo apt update
 apt install -y wine-development wine32-development wine64-development libwine-development libwine-development:i386 fonts-wine
@@ -12,7 +13,7 @@ apt install -y wine-development wine32-development wine64-development libwine-de
 #### Connect to wifi using only terminal
 
 # Taken from here:
-#https://askubuntu.com/questions/833905/how-can-i-connect-to-a-specific-bssid
+# https://askubuntu.com/questions/833905/how-can-i-connect-to-a-specific-bssid
 
 # Show wireless networks with quality bars:
 nmcli -f in-use,ssid,bssid,signal,bars  dev wifi
@@ -25,43 +26,50 @@ nmcli d wifi connect XX:XX:XX:XX:XX:XX password "mypassword"
 
 #### Software Raid with mdadm
 
-https://wiki.debian.org/SoftwareRAID
+# https://wiki.debian.org/SoftwareRAID
 
 
 #### Fix “E: unable to locate package” Error in Debian 9
 
-https://www.tecmint.com/fix-unable-to-locate-package-error-in-debian-9/
+# https://www.tecmint.com/fix-unable-to-locate-package-error-in-debian-9/
 
 
 #### Get Started With GNUPlot
 
-https://www.howtoforge.com/tutorial/get-started-with-gnuplot/
+# https://www.howtoforge.com/tutorial/get-started-with-gnuplot/
 
 
 #### Low-Level Graphics on Linux (no dependency)
 
-http://betteros.org/tut/graphics1.php
+# http://betteros.org/tut/graphics1.php
 
 
 #### Developing and maintaining Debian has some advantages
 
-https://wiki.debian.org/MemberBenefits
+# https://wiki.debian.org/MemberBenefits
 
 
 #### Build and install Open Broadcaster Software
 
 # Become root:
+
 su -
+
 ===================================================================================================
 # FFmpeg in Debian Stretch, taken from here:
 # https://www.reddit.com/r/debian/comments/69o4l4/i_am_having_trouble_building_obsstudio_on_debian_8/
+
 apt install -y libswscale-dev libswresample-dev libavcodec-dev libavdevice-dev libavformat-dev
 ===================================================================================================
+
 # Taken from here:
 # https://github.com/jp9000/obs-studio/wiki/Install-Instructions#linux-install-directions
+
 apt install -y libx11-dev libgl1-mesa-dev libpulse-dev libxcomposite-dev libxinerama-dev libv4l-dev libudev-dev libfreetype6-dev libfontconfig-dev qtbase5-dev 
 libqt5x11extras5-dev libx264-dev libxcb-xinerama0-dev libxcb-shm0-dev libjack-jackd2-dev libcurl4-openssl-dev
+
 # Become a user:
+
 exit
 git clone https://github.com/jp9000/obs-studio.git
 cd obs-studio
@@ -72,27 +80,47 @@ pwd
 su -
 cd ......build folder from previows pwd.......
 sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
+
 # Become a user:
+
 exit
 whoami
+
 # Become root:
+
 su -
 cd ......build folder from previous pwd.......
 chown -R ...user from previous whoami... *
 chgrp -R ...user from previous whoami... *
 dpkg -i *.deb
+
 # Become a user:
+
 exit
+
 # Save all buffers to disk:
+
 sync
+
 
 #### Debian Stretch Live with persistence
 
-See here included file debian-stretch-live-with-persistence for EFI and
-debian-stretch-live-with-persistence-for-old-laptop for no EFI, old BIOS.
-This manual explains persistence:
+# See here included file debian-stretch-live-with-persistence for EFI and
+# debian-stretch-live-with-persistence-for-old-laptop for no EFI, old BIOS.
+# This manual explains persistence:
+# http://debian-live.alioth.debian.org/live-manual/stable/manual/html/live-manual.en.html
 
-http://debian-live.alioth.debian.org/live-manual/stable/manual/html/live-manual.en.html
+
+#### Boot on old laptop with BIOS
+
+# If BIOS can't boot properly from USB, not fast or not found, use Plop Boot Manager from:
+# https://www.plop.at/en/bootmanagers.html
+
+# Write Plop Boot Manager to CD and boot from it with installed or live Debian on USB, select USB
+# Very useful if BIOS does not have Boot from USB option.
+# When boot is too slow, USB 1.1 instead of USB 2.0, it may be a hardware issue:
+# Ground loop between GND of laptop and GND of external harddisk. Check by booting laptop on battery only.
+
 
 
 #### W A R N I N G S ! ! !
