@@ -16,7 +16,6 @@ int main( )
 
 # Example 2 executable file is 105 bytes, avoid using printf:
 ===================================================================================================
-
 #include <stdio.h>
 
 int main( )
