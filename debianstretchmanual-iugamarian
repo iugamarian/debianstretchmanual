@@ -22,7 +22,7 @@ int main( )
 int main( )
 {
         char *p = "hello, world\n";
-	    while (*p)
+        while (*p)
         {
                 putchar(*p);
                 p++;
@@ -31,6 +31,7 @@ int main( )
 ===================================================================================================
 # *p is a pointer - a memory address where [hello, world\n] is written
 # https://en.wikipedia.org/wiki/Pointer_%28computer_programming%29
+
 
 #### Run Windows programs
 
