@@ -3,6 +3,34 @@
 
 # http://sillybytes.net/2016/06/how-to-write-c-in-2016.html
 
+# Example 1 executable file is 71 bytes, use printf:
+===================================================================================================
+#include <stdio.h>
+
+int main( )
+{
+        printf("hello, world\n");
+}
+===================================================================================================
+# https://en.wikipedia.org/wiki/%22Hello,_World!%22_program
+
+# Example 2 executable file is 105 bytes, avoid using printf:
+===================================================================================================
+
+#include <stdio.h>
+
+int main( )
+{
+        char *p = "hello, world\n";
+	    while (*p)
+        {
+                putchar(*p);
+                p++;
+        }
+}
+===================================================================================================
+# *p is a pointer - a memory address where [hello, world\n] is written
+# https://en.wikipedia.org/wiki/Pointer_%28computer_programming%29
 
 #### Run Windows programs
 
