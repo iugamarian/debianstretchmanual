@@ -65,6 +65,47 @@ sync
 echo "creating persistence.conf"
 echo "/ union" > ${tmppersistence}/persistence.conf
 
+# Firefox cache in tmpfs
+echo "forcing Firefox to have it's cache in tmpfs"
+
+# https://askubuntu.com/questions/12098/what-does-outputting-to-dev-null-accomplish-in-bash-scripts
+if [ `id -u user 2>&1 | grep "no such user" |wc -c` -eq 0 ]; then
+    echo ""
+    echo "The user \"user\" exists on this system."
+    echo ""
+    mkdir -p ${tmppersistence}/rw/home/user/.cache/
+    sync
+    sleep 1
+    # This is the command for which we need so many others for "user"
+    ln -s /tmp ${tmppersistence}/rw/home/user/.cache/mozilla
+    sync
+    sleep 1
+    chown -R user ${tmppersistence}/rw/home/user/
+    chgrp -R user ${tmppersistence}/rw/home/user/
+    sync
+else
+    echo ""
+    echo "The user \"user\" does not exist on this system. Add and remove required."
+    echo ""
+    # https://www.cyberciti.biz/tips/howto-write-shell-script-to-add-user.html
+    # perl -e 'print crypt("live", "salt"),"\n"'
+    # https://wiki.archlinux.org/index.php/users_and_groups
+    # this automatically also adds the group "user", password is "live"
+    useradd -m -p sa/dqaR.MHunQ user
+    sync
+    sleep 1
+    mkdir -p ${tmppersistence}/rw/home/user/.cache/
+    # This is the command for which we need so many others for "user"
+    ln -s /tmp ${tmppersistence}/rw/home/user/.cache/mozilla
+    chown -R user ${tmppersistence}/rw/home/user/
+    chgrp -R user ${tmppersistence}/rw/home/user/
+    sync
+    sleep 1
+    # this automatically also removes the group "user"
+    userdel -r user
+    sync
+fi
+
 echo "installing grub"
 grub-install --target=i386-pc --boot-directory=${tmplive}/boot/ ${dev}
 
