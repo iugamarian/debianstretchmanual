@@ -199,5 +199,12 @@ sync
     Solution: Press CTRL+F5 or with browser closed delete from home folder: .mozilla and .cache/mozilla
         To see hidden .files in most graphical file managers press CTRL+H and press again to deactivate.
 
-
+---/tmp is not actually tmpfs and is slow
+    Solution:
+    # https://github.com/debian-pi/raspbian-ua-netinst/issues/210
+    # https://askubuntu.com/questions/432699/what-is-the-t-letter-in-the-output-of-ls-ld-tmp
+    In /etc/fstab add:
+    tmpfs           /tmp            tmpfs  nodev,nosuid,mode=1777     0 0
+    
+    
 #### TODO
