@@ -199,12 +199,27 @@ sync
     Solution: Press CTRL+F5 or with browser closed delete from home folder: .mozilla and .cache/mozilla
         To see hidden .files in most graphical file managers press CTRL+H and press again to deactivate.
 
----/tmp is not actually tmpfs and is slow
+---/tmp is not actually in tmpfs and is slow for multiple operations
     Solution:
-    # https://github.com/debian-pi/raspbian-ua-netinst/issues/210
-    # https://askubuntu.com/questions/432699/what-is-the-t-letter-in-the-output-of-ls-ld-tmp
-    In /etc/fstab add:
-    tmpfs           /tmp            tmpfs  nodev,nosuid,mode=1777     0 0
-    
-    
+        # https://github.com/debian-pi/raspbian-ua-netinst/issues/210
+        # https://askubuntu.com/questions/432699/what-is-the-t-letter-in-the-output-of-ls-ld-tmp
+        In /etc/fstab add this, then reboot:
+        tmpfs           /tmp            tmpfs  nodev,nosuid,mode=1777     0 0
+
+---Firefox is slow, this is mostly because of it's on disk cache (a lot of small writes)
+    Solution:
+        Make sure /tmp is actually in tmpfs not on disk:
+        df -hT
+        As the user (not as root), close all Firefox windows and run these commands:
+        rm -rf /home/$USER/.cache/mozilla
+        ln -s /tmp /home/$USER/.cache/mozilla
+        And check that it worked:
+        ls -l /home/$USER/.cache
+        No reboot required.
+        Firefox will remember passwords, bookmarks and history because they are in /home/$USER/.mozilla
+        and they slow it down much less than /home/$USER/.cache/mozilla and can continue to stay on disk.
+        Firefox creates /home/$USER/.cache/mozilla/firefox/xxx.xxx which now becomes /tmp/firefox/xxx.xxx
+        in tmpfs. Other users will get different xxx.xxx so it works for multiple users including root.
+
+
 #### TODO
