@@ -226,6 +226,9 @@ sync
         # https://askubuntu.com/questions/291570/mark-bad-sectors-on-hard-drive-without-formating/490549#490549
         sudo badblocks -svvn -c 262144 /dev/sdx
         For very old hard disks (under 40 GB) reduce -c number 8 times to 32768 as speed is much lower.
+        Or this that works well on hard disk that click a lot, reduces clicking after some more usage:
+        # https://askubuntu.com/questions/241944/how-to-fix-the-hard-drive-bad-sector
+        dd if=/dev/zero of=/dev/sdx bs=1M 
 
 
 #### TODO
