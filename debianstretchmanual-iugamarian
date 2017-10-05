@@ -1,3 +1,58 @@
+#### Record webcam raw audio and video
+
+# Sound Preferences -> Input -> select C910
+
+# View that audio input is working:
+
+pavucontrol
+
+# https://wiki.archlinux.org/index.php/Webcam_setup#Webcam_configuration
+# https://stackoverflow.com/questions/26108643/setting-frame-rate-on-logitech-c210-webcam-in-c-on-raspberry-pi-using-v4l2
+# Webcam Logitech HD Pro Webcam C910 needs 640x480 to have high frame rate
+
+#https://wiki.archlinux.org/index.php/FFmpeg#Recording_webcam
+#https://raspberrypi.stackexchange.com/questions/3194/dump-video-from-webcam-to-file
+# Press CTRL+C to stop recording
+
+ffmpeg -f v4l2 -video_size 640x480 -i /dev/video0 -f alsa -i default -c:v copy -c:a copy output.mkv
+
+# https://wjwoodrow.wordpress.com/2013/02/04/correcting-for-audiovideo-sync-issues-with-the-ffmpeg-programs-itsoffset-switch/
+# Audio is 850ms before video on Logitech HD Pro Webcam C910
+
+ffmpeg -i output.mkv -itsoffset 0.850 -i output.mkv -vcodec copy -acodec copy -map 0:0 -map 1:1 output-correct.mkv
+
+# One hour on Logitech HD Pro Webcam C910 takes 63 GB so about 18 MB/s.
+# Good if CPU power is very weak. Also a video codec slows framerate.
+# You do need a big and fast harddisk.
+
+mediainfo-gui
+
+Video
+ID                                       : 1
+Format                                   : RGB
+Codec ID                                 : V_UNCOMPRESSED
+Codec ID/Info                            : Raw uncompressed video frames
+Width                                    : 640 pixels
+Height                                   : 480 pixels
+Display aspect ratio                     : 4:3
+Frame rate mode                          : Variable
+Default                                  : Yes
+Forced                                   : No
+
+
+Audio
+ID                                       : 2
+Format                                   : PCM
+Codec ID                                 : A_PCM/INT/LIT
+Duration                                 : 14 s 749 ms
+Bit rate mode                            : Constant
+Channel(s)                               : 2 channels
+Sampling rate                            : 48.0 kHz
+Bit depth                                : 16 bits
+Default                                  : Yes
+Forced                                   : No
+
+
 #### Modify your prompt in .bashrc with a help site
 
 # http://ezprompt.net/
