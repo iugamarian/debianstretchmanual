@@ -1,3 +1,11 @@
+#### Very good applications
+
+# https://mate-desktop.org/
+
+su -
+apt install -y unar youtube-dl mc git guvcview mediainfo-gui mpv ffmpeg
+
+
 #### Record webcam raw audio and video
 
 # Sound Preferences -> Input -> select C910
@@ -10,8 +18,8 @@ pavucontrol
 # https://stackoverflow.com/questions/26108643/setting-frame-rate-on-logitech-c210-webcam-in-c-on-raspberry-pi-using-v4l2
 # Webcam Logitech HD Pro Webcam C910 needs 640x480 to have high frame rate
 
-#https://wiki.archlinux.org/index.php/FFmpeg#Recording_webcam
-#https://raspberrypi.stackexchange.com/questions/3194/dump-video-from-webcam-to-file
+# https://wiki.archlinux.org/index.php/FFmpeg#Recording_webcam
+# https://raspberrypi.stackexchange.com/questions/3194/dump-video-from-webcam-to-file
 # Press CTRL+C to stop recording
 
 ffmpeg -f v4l2 -video_size 640x480 -i /dev/video0 -f alsa -i default -c:v copy -c:a copy output.mkv
@@ -20,6 +28,12 @@ ffmpeg -f v4l2 -video_size 640x480 -i /dev/video0 -f alsa -i default -c:v copy -
 # Audio is 850ms before video on Logitech HD Pro Webcam C910
 
 ffmpeg -i output.mkv -itsoffset 0.850 -i output.mkv -vcodec copy -acodec copy -map 0:0 -map 1:1 output-correct.mkv
+
+# or to get small file with high quality
+# https://trac.ffmpeg.org/wiki/Encode/H.264
+# https://trac.ffmpeg.org/wiki/Encode/MP3
+
+ffmpeg -i output.mkv -itsoffset 0.850 -i output.mkv -vcodec libx264 -crf 18 -acodec libmp3lame -aq 320k -map 0:0 -map 1:1 output-correct.mkv
 
 # One hour on Logitech HD Pro Webcam C910 takes 63 GB so about 18 MB/s.
 # Good if CPU power is very weak. Also a video codec slows framerate.
