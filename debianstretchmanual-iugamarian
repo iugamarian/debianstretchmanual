@@ -38,6 +38,7 @@ ffmpeg -i output.mkv -itsoffset 0.850 -i output.mkv -vcodec libx264 -crf 18 -aco
 # One hour on Logitech HD Pro Webcam C910 takes 63 GB so about 18 MB/s.
 # Good if CPU power is very weak. Also a video codec slows framerate.
 # You do need a big and fast harddisk.
+# https://superuser.com/questions/486325/lossless-universal-video-format
 
 mediainfo-gui
 
