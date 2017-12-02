@@ -287,6 +287,10 @@ sync
         # https://askubuntu.com/questions/241944/how-to-fix-the-hard-drive-bad-sector
         dd if=/dev/zero of=/dev/sdx bs=1M 
 
+---Unable to login all of the sudden
+    Solution:
+        Root partition is full 0 bytes free - use a live CD to delete some files, with ncdu
+
 
 #### TODO
 
