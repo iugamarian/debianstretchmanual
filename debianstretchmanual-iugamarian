@@ -292,6 +292,12 @@ sync
         Root partition is full 0 bytes free - use a live CD to delete some files, with ncdu
 
 
+---Dual boot time with Windows is incorrect
+    Solution: Windows writes local time to clock chip, Linux writes UTC time to chip. Make Linux use local time:
+        su -
+        timedatectl set-local-rtc 1
+
+
 #### TODO
 
 -add more concise stuff
