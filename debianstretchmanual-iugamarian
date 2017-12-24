@@ -297,6 +297,16 @@ sync
         su -
         timedatectl set-local-rtc 1
 
+---Printer settings not found, printer not working
+    Solution: Debian is fussy about printers for space and security reasons:
+        https://www.howtoforge.com/how-to-install-a-canon-printer-on-debian-and-debian-like-systems
+        su -
+        apt-get install cups cups-client foomatic-db
+        adduser YOUR_NORMAL_ACCOUNT lpadmin
+        Power on and plug your printer, and then browse as user YOUR_NORMAL_ACCOUNT to http://localhost:631/
+        Go to the Administration tab and click Add printer
+        For Samsung SCX-4216F the ppd driver SCX-4x16 is not good, scroll down and select Samsung-SCX-4216F
+
 
 #### TODO
 
