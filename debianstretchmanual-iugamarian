@@ -313,7 +313,24 @@ sync
     Solution: The USB enclosures reported a different sector size than the motherboard,
         and as result the partition tables are interpreted differently:
         https://serverfault.com/questions/764271/cant-mount-sata-drives-when-moved-from-usb-enclosure-to-internal
-        ...
+        I had a similar problem with a 4TB disk that I had moved from a USB enclosure to an internal SATA port.
+        Apparently the USB enclosure had reported 4k sectors, and thus I was able to use an old-fashioned MBR
+        partition table to create a 4TB ext4 partition. After connecting the disk via SATA, the ext4 partition
+        wasn't found any more, apparently because the disk was accessed with 512B sectors now.
+        I got it solved with the following steps, using the Testdisk data recovery tool which is available in Ubuntu:
+        created a backup of the original partition table (sfdisk -d /dev/sdb > sfdisk-sdb.txt), for safety
+        used testdisk /dev/sdb to find the original ext4 file system
+        let testdisk write a new MBR partition table to disk
+        since MBR table doesn't support 4TB partitions, the ext4 partition still couldn't be mounted, with error
+        EXT4-fs (sdb1): bad geometry: block count 976751744 exceeds size of device (536870911 blocks)
+        used gdisk /dev/sdb to convert the MBR to GPT format, and write the GPT to disk
+        used testdisk /dev/sdb again to find the original ext4 file system (it detected the wrong file system type
+        but that didn't matter), and let it write a new GPT table to disk
+        used gdisk /dev/sdb to change the incorrectly detected file system type to 8300
+        Maybe I just got lucky, but after this procedure the ext4 file system could be mounted as usual.
+        fsck -f /dev/sdb1 didn't detect any errors, and blkid /dev/sdb1 and tune2fs /dev/sdb1 gave same results as
+        when using the USB enclosure.
+
 
 
 #### TODO
