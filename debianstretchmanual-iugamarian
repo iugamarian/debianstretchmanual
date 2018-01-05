@@ -309,6 +309,12 @@ sync
         https://debian-handbook.info/browse/stable/sect.config-printing.html
         apt-get install -y system-config-printer
         
+---USB enclosure drive not working on motherboard and the other way arround
+    Solution: The USB enclosures reported a different sector size than the motherboard,
+        and as result the partition tables are interpreted differently:
+        https://serverfault.com/questions/764271/cant-mount-sata-drives-when-moved-from-usb-enclosure-to-internal
+        ...
+
 
 #### TODO
 
