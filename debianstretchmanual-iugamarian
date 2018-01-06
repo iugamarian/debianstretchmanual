@@ -247,6 +247,22 @@ sync
         vm.dirty_writeback_centisecs = 600
         vm.dirty_expire_centisecs = 600
 
+or for OpenWRT or LEDE full /etc/sysctl.conf
+
+https://www.pcsuggest.com/transmission-openwrt-torrent-downloader/
+
+vm.vfs_cache_pressure=200
+vm.min_free_kbytes=4096
+vm.overcommit_memory=2
+vm.overcommit_ratio=60
+vm.swappiness=95
+vm.dirty_bytes = 2097152
+vm.dirty_background_bytes = 2097152
+vm.dirty_writeback_centisecs = 600
+vm.dirty_expire_centisecs = 600
+
+
+
 ---apt or web browser hangs on the internet for IPV6 addresses, this means the ISP does not allow them
     Solution: In a .conf file in /etc/sysctl.d write (disable ipv6):
         net.ipv6.conf.all.disable_ipv6 = 1
