@@ -479,7 +479,43 @@ vm.dirty_expire_centisecs = 600
         apt install -y netcat pv
         nc 192.168.1.Openrt 7878 | pv | tar -xpf -
         
-        Used 1,3 MB of RAM on OpenWrt with 2.8MB transfer speed limited by router cpu power
+        Used 1,3 MB of RAM on OpenWrt with 2.8MB transfer speed limited by router cpu power.
+        
+        tar: removing leading '/' from member names
+
+        https://unix.stackexchange.com/questions/59243/tar-removing-leading-from-member-names#59246
+        That's actually a feature, not a problem. Archives with absolute locations are a security risk.
+        Attackers could use such archives to trick users into installing files in critical system locations.
+        Yes, you could use -P. But what's wrong with allowing tar to remove the forward slash, and simply
+        requiring the user of the archive to explicitly do the extraction in the root directory? Then
+        they're consciously impacting critical system locations, and can't do it by accident.
+        Sometimes features are problems. I found this thread after setting up a backup script that would
+        email on a non-zero exit status from tar. This particular message was causing tar to exit with a
+        status of 1, which was causing me to receive false email alerts on successful backups, simply
+        because tar was writing this message to STDERR. I fixed this issue by using my own solution:
+
+        cd /path/to/network/share && tar -cJf scripts.backup.tar.xz -C / home/user/scripts 2>/dev/null || [send an email alert]
+
+        If you want to get rid of "Removing leading `/' from member names" being printed to STDERR, but
+        still want to leave off those leading slashes as tar wisely does by default, I saw an excellent
+        solution here by commenter timsoft.
+        The solution involves using -C option to change directory to the root (/), then specifying the file
+        tree to archive without a leading slash, because now you only need a relative path. This does the same
+        thing as a normal tar create command, but no stripping is needed:
+
+        tar fcz bkup.tar.gz -C / home/foo/
+
+        Doesn't work if you want to tar files denoted by shell-expansion (e.g. tar c -C / home/foo/*), because
+        the shell doesn't know about the changed root.
+        I found the most appropriate solution for my case (in a shell script) is to go to the parent directory
+        and execute the command there.
+
+        cd /var/www/
+        tar -czf mysite.gz mysite
+
+        Instead of:
+
+        tar -czf /var/www/mysite.gz /var/www/mysite
 
 
 #### TODO
