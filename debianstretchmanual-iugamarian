@@ -460,6 +460,27 @@ vm.dirty_expire_centisecs = 600
 
         while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; cat /tmp/index.html; } | netcat -l -p 8080; done
 
+        My secure working set of commands:
+        
+        Sender OpenWrt
+        
+        opkg install bash netcat nano
+        nano /etc/firewall.user
+            iptables -A input_rule -p tcp -s 192.168.1.Computer/32 --dport 7878 -j ACCEPT
+            iptables -A input_rule -p tcp -s 0.0.0.0/0 --dport 7878 -j DROP
+        save exit
+        exit
+        login
+        tar c /storage/folder/ | nc -l -p 7878
+        
+        Receiver Computer
+        
+        su -
+        apt install -y netcat pv
+        nc 192.168.1.Openrt 7878 | pv | tar -xpf -
+        
+        Used 1,3 MB of RAM on OpenWrt with 2.8MB transfer speed limited by router cpu power
+
 
 #### TODO
 
