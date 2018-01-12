@@ -346,66 +346,119 @@ vm.dirty_expire_centisecs = 600
         Maybe I just got lucky, but after this procedure the ext4 file system could be mounted as usual.
         fsck -f /dev/sdb1 didn't detect any errors, and blkid /dev/sdb1 and tune2fs /dev/sdb1 gave same results as
         when using the USB enclosure.
+        Sector-size issues are becoming quite complex. Until late 2009, the vast majority of hard disks used 512-byte
+        sectors, and that was that. In late 2009, disk manufacturers began introducing so-called Advanced Format (AF)
+        disks, which use 4096-byte sectors. These first AF disks (and, AFAIK, all AF disks today) present an interface
+        to the computer that shows each 4096-byte physical sector as being split up into eight 512-byte logical sectors.
+        This conversion enables older tools, including many BIOSes, that were built with 512-byte assumptions, to
+        continue to work. I don't know if your disk uses AF or not, but in either case, it almost certainly uses a
+        512-byte logical sector size, meaning that the interface to the OS should use 512-byte sectors.
+        Complicating matters is certain USB disk enclosures. Some of these enclosures do the reverse of what AF does:
+        They take eight disk sectors and bundle them into one new 4096-byte sector. I'm not sure what the reasoning
+        is behind this move, but one practical advantage is that disks larger than 2TiB can be used with the old MBR
+        partitioning system. One major disadvantage is that a disk partitioned in one of these enclosures can not be
+        used directly or in an enclosure that doesn't do this type of translation. Likewise, a disk prepared without
+        this translation can't be used when it's transferred into such an enclosure. Note that this problem goes well
+        beyond the MBR itself; your disk might identify the first partition as beginning on (512-byte) sector 2048,
+        but if your OS were to seek to (4096-byte) sector 2048, it would not find the start of that partition! You've
+        run into this problem. As such, your initial thought that it's the USB enclosure's fault is closer to the mark
+        than your more recent thought that your motherboard messed it up. I've never heard of a motherboard translating
+        sector size in this way. (Some hardware RAID devices do so, though.)
+        I don't know of a way to force Linux to adjust its idea of the sector size, but if you have enough disk space,
+        doing a low-level disk copy to another disk may help. For instance:
+
+        dd if=/dev/sdb of=~/image.img
+
+        This will copy your disk from /dev/sdb (the USB disk; adjust as necessary) to the file ~/image.img. You can then
+        use the following script to mount the image's partitions:
+
+        #!/bin/bash
         
+        gdisk -l $1 > /tmp/mount_image.tmp
+        
+        let StartSector=`egrep "^   $2|^  $2" /tmp/mount_image.tmp | fmt -u -s | sed -e 's/^[ \t]*//' | head -1 | cut -d " " -f 2`
 
-    Sector-size issues are becoming quite complex. Until late 2009, the vast majority of hard disks used 512-byte
-    sectors, and that was that. In late 2009, disk manufacturers began introducing so-called Advanced Format (AF)
-    disks, which use 4096-byte sectors. These first AF disks (and, AFAIK, all AF disks today) present an interface
-    to the computer that shows each 4096-byte physical sector as being split up into eight 512-byte logical sectors.
-    This conversion enables older tools, including many BIOSes, that were built with 512-byte assumptions, to
-    continue to work. I don't know if your disk uses AF or not, but in either case, it almost certainly uses a
-    512-byte logical sector size, meaning that the interface to the OS should use 512-byte sectors.
+        let StartByte=($StartSector*512)
 
-    Complicating matters is certain USB disk enclosures. Some of these enclosures do the reverse of what AF does:
-    They take eight disk sectors and bundle them into one new 4096-byte sector. I'm not sure what the reasoning
-    is behind this move, but one practical advantage is that disks larger than 2TiB can be used with the old MBR
-    partitioning system. One major disadvantage is that a disk partitioned in one of these enclosures can not be
-    used directly or in an enclosure that doesn't do this type of translation. Likewise, a disk prepared without
-    this translation can't be used when it's transferred into such an enclosure. Note that this problem goes well
-    beyond the MBR itself; your disk might identify the first partition as beginning on (512-byte) sector 2048,
-    but if your OS were to seek to (4096-byte) sector 2048, it would not find the start of that partition! You've
-    run into this problem. As such, your initial thought that it's the USB enclosure's fault is closer to the mark
-    than your more recent thought that your motherboard messed it up. I've never heard of a motherboard translating
-    sector size in this way. (Some hardware RAID devices do so, though.)
+        echo "Mounting partition $2, which begins at sector $StartSector"
 
-    I don't know of a way to force Linux to adjust its idea of the sector size, but if you have enough disk space,
-    doing a low-level disk copy to another disk may help. For instance:
+        mount -o loop,offset=$StartByte $1 $3
 
-dd if=/dev/sdb of=~/image.img
+        rm /tmp/mount_image.tmp
 
-    This will copy your disk from /dev/sdb (the USB disk; adjust as necessary) to the file ~/image.img. You can then
-    use the following script to mount the image's partitions:
+        Save the script as, say, mount_image and use it like this:
 
-#!/bin/bash
-gdisk -l $1 > /tmp/mount_image.tmp
-let StartSector=`egrep "^   $2|^  $2" /tmp/mount_image.tmp | fmt -u -s | sed -e 's/^[ \t]*//' | head -1 | cut -d " " -f 2`
+        ./mount_image ~/image.img 2 /mnt
 
-let StartByte=($StartSector*512)
+        This will mount partition 2 of image.img to /mnt. Note that the script relies on GPT fdisk (gdisk), which most
+        distributions include in a package called gptfdisk or gdisk.
+        In the long run, a better solution is to find a way to connect the disk that won't do the sector-size translation.
+        A direct connection to a new motherboard should do the trick; or you can probably find an external enclosure that
+        doesn't do the translation. In fact, some enclosures do the translation on USB ports but not on eSATA ports, so if
+        your enclosure has an eSATA port, you could try using that. I realize that these solutions are all likely to cost
+        money, which you say you don't have, but maybe you can trade your translating enclosure for one that doesn't do the
+        translation.
+        Another option that occurs to me is to try using a virtual machine like VirtualBox. Such a tool might assume a
+        512-byte sector size when accessing the disk device, effectively undoing the translation; or you might be able
+        to copy the disk's contents raw (as in dd if=/dev/sdc of=/dev/sdb) within the virtual machine, which might copy
+        the contents with compression, thus enabling the image to fit on less disk space than the original consumes.
 
-echo "Mounting partition $2, which begins at sector $StartSector"
+---You want to send large files from or to an embedded environment
+    Solution: http://www.screenage.de/blog/2007/12/30/using-netcat-and-tar-for-network-file-transfer/
+        The sender has to call netcat in server mode and pipe content into it. The next line tells tar
+        to build a tarball and write it to standard output which is redirected via a pipe to netcat.
+        Netcat is told to start in server mode (-l), listen on port 7878 (-p 7878) and shutdown itself
+        after waiting 10 seconds after having seen an end of file in standard input (-q 10):
 
-mount -o loop,offset=$StartByte $1 $3
+        $ tar c directory | nc -q 10 -l -p 7878
 
-rm /tmp/mount_image.tmp
+        The receiver has to call netcat and tell him to connect to the remote machine and the correct
+        port and redirects the standard output to a file. For convenience he also sets a timeout
+        parameter (-w 10):
 
-Save the script as, say, mount_image and use it like this:
+        $ nc -w 10 remotehost 7878 > nameoftar.tar
 
-./mount_image ~/image.img 2 /mnt
+        That’s all. You just setup a very fast file transfer. For testing purposes use localhost.
+        Please note that on the receiver side you are completely free to choose a file name for
+        the .tar file. If you use something like gzip or bzip2 compression you should choose
+        something like .tar.gz or .tar.bz2 of course.
+        
+        https://www.ostechnix.com/quickly-transfer-large-files-network-linux-unix/
+        
+        On destination system:
 
-    This will mount partition 2 of image.img to /mnt. Note that the script relies on GPT fdisk (gdisk), which most
-    distributions include in a package called gptfdisk or gdisk.
+        nc -l 7000 | pv | tar -xpf -
 
-    In the long run, a better solution is to find a way to connect the disk that won't do the sector-size translation.
-    A direct connection to a new motherboard should do the trick; or you can probably find an external enclosure that
-    doesn't do the translation. In fact, some enclosures do the translation on USB ports but not on eSATA ports, so if
-    your enclosure has an eSATA port, you could try using that. I realize that these solutions are all likely to cost
-    money, which you say you don't have, but maybe you can trade your translating enclosure for one that doesn't do the
-    translation.
+        On source system:
 
-    Another option that occurs to me is to try using a virtual machine like VirtualBox. Such a tool might assume a
-    512-byte sector size when accessing the disk device, effectively undoing the translation; or you might be able
-    to copy the disk's contents raw (as in dd if=/dev/sdc of=/dev/sdb) within the virtual machine, which might copy
-    the contents with compression, thus enabling the image to fit on less disk space than the original consumes.
+        tar -cf - * | pv | nc 192.168.1.105 7000
+
+        Again, these commands should be run as root user. And, both source and destination systems
+        should have netcat and pv installed. Transferring large files over LAN using netcat and tar
+        can indeed save a lot of time.
+
+        Disclaimer: There is no security in this method. Because, as you see in the above example,
+        there is no authentication either side. All you need to know the destination system’s IP address.
+        Transferring files using netcat is recommended only in protected networks. If you concern about
+        security, I strongly suggest you to use scp command.
+
+        https://wiki.openwrt.org/doc/howto/http.netcat
+        
+        As default OpenWrt installs
+
+        busybox-ash (that is the Busybox-fork of the Debian implementation of the Almquist shell
+        (see → http://www.in-ulm.de/~mascheck/various/ash/#busybox). In case you want to read about it.)
+        busybox-nc (= the busybox implementation of netcat) does not support server mode.
+
+        You can anytime replace those packages by they original counterparts:
+
+        opkg install bash netcat
+
+        Examples:
+
+        https://forum.openwrt.org/viewtopic.php?pid=210001#p210001
+
+        while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; cat /tmp/index.html; } | netcat -l -p 8080; done
 
 
 #### TODO
