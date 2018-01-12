@@ -481,6 +481,7 @@ vm.dirty_expire_centisecs = 600
         nc 192.168.1.Openrt 7878 | pv | tar -xpf -
         
         Used 1,3 MB of RAM on OpenWrt with 2.8MB transfer speed limited by router cpu power.
+        http://g33kinfo.com/info/archives/1713
 
 ---You see message  tar: removing leading '/' from member names
     Solution: https://unix.stackexchange.com/questions/59243/tar-removing-leading-from-member-names#59246
