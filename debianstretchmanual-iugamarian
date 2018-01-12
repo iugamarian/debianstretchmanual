@@ -464,7 +464,7 @@ vm.dirty_expire_centisecs = 600
         
         Sender OpenWrt
         
-        opkg install bash netcat nano
+        opkg update && opkg install bash netcat nano
         nano /etc/firewall.user
             iptables -A input_rule -p tcp -s 192.168.1.Computer/32 --dport 7878 -j ACCEPT
             iptables -A input_rule -p tcp -s 0.0.0.0/0 --dport 7878 -j DROP
@@ -477,13 +477,13 @@ vm.dirty_expire_centisecs = 600
         
         su -
         apt install -y netcat pv
+        exit
         nc 192.168.1.Openrt 7878 | pv | tar -xpf -
         
         Used 1,3 MB of RAM on OpenWrt with 2.8MB transfer speed limited by router cpu power.
-        
-        tar: removing leading '/' from member names
 
-        https://unix.stackexchange.com/questions/59243/tar-removing-leading-from-member-names#59246
+---You see message  tar: removing leading '/' from member names
+    Solution: https://unix.stackexchange.com/questions/59243/tar-removing-leading-from-member-names#59246
         That's actually a feature, not a problem. Archives with absolute locations are a security risk.
         Attackers could use such archives to trick users into installing files in critical system locations.
         Yes, you could use -P. But what's wrong with allowing tar to remove the forward slash, and simply
