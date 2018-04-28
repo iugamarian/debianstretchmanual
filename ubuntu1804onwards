@@ -1,0 +1,68 @@
+#### DUAL MONITOR SETUP FROM THE SECOND ONE WHILE NOT SEEING THE FIRST ONE
+
+https://askubuntu.com/questions/141752/keyboard-shortcut-to-move-windows-between-monitors?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qaMove mouse to the right
+
+Super+SHIFT+right arrow
+or
+CTRL+ALT+SHIFT+right arrow
+
+CTRL+ALT+T
+
+gnome-control-center
+
+Devices -> Displays -> Single display -> select the one from the right -> Apply -> Keep
+
+
+
+#### SAMBA SHARE
+
+See iugamarian/links Working Samba share
+
+sudo -s
+apt-get install -y samba samba-common python-glade2 system-config-samba
+cp -pf /etc/samba/smb.conf /etc/samba/smb.conf.bak
+cat /dev/null  > /etc/samba/smb.conf
+systemctl stop apparmor
+systemctl disable apparmor
+chmod -R 0755 /home/pi/Downloads/
+nano /etc/samba/smb.conf
+pdbedit -a pi
+systemctl restart smbd
+
+For firewall replace imput_rule with INPUT
+
+https://askubuntu.com/questions/36608/ufw-firewall-still-blocking-smb-despite-adding-rules
+
+
+#### IPTABLES SAVE
+
+https://help.ubuntu.com/community/IptablesHowTo
+
+sudo -s
+iptables -L
+sh -c "iptables-save > /etc/iptables.rules.old"
+
+# Add new iptables rules
+
+sh -c "iptables-save > /etc/iptables.rules"
+nano /etc/network/if-pre-up.d/iptablesload
+
+#################
+#!/bin/sh
+iptables-restore < /etc/iptables.rules
+exit 0
+#################
+
+chmod +x /etc/network/if-pre-up.d/iptablesload
+
+
+
+STARTUP APPLICATIONS
+
+https://askubuntu.com/questions/37957/how-do-i-manage-applications-on-startup-in-gnome-3
+
+sudo -s
+apt install -y gnome-tweaks
+exit
+gnome-tweaks
+-> Startup applications -> Add
