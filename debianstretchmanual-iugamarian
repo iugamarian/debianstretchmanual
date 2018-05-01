@@ -310,8 +310,15 @@ vm.dirty_expire_centisecs = 600
 
 ---Dual boot time with Windows is incorrect
     Solution: Windows writes local time to clock chip, Linux writes UTC time to chip. Make Linux use local time:
+        https://wiki.archlinux.org/index.php/time
+        https://wiki.archlinux.org/index.php/Network_Time_Protocol_daemon
         su -
         timedatectl set-local-rtc 1
+        And to syncronize without restarting computer:
+        apt install -y ntp
+        ntpd -qg
+        In a minute the clocks on screen will be updated. -q=quit after -g=set on error, can do max 68 years past or future.
+
 
 ---Printer settings not found, printer not working
     Solution: Debian is fussy about printers for space and security reasons:
