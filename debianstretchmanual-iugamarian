@@ -318,6 +318,51 @@ vm.dirty_expire_centisecs = 600
         apt install -y ntp
         ntpd -qg
         In a minute the clocks on screen will be updated. -q=quit after -g=set on error, can do max 68 years past or future.
+        But the actual hardware clock is not written yet and running programs show bugs in time manasgement (transmission)
+        https://www.thegeekstuff.com/2013/08/hwclock-examples/
+        https://askubuntu.com/questions/175452/hwclock-not-in-sync-with-system-clock
+        hwclock -w -l
+        hwclock
+        date
+        If hwclock is the same as date clock then dont do this also:
+        hwclock -w -u
+        hwclock
+        date
+        If hwclock is the same as date clock then dont do this also:
+        hwclock --set --date "8/11/2018 23:10:45"
+        
+        man hwclock
+        
+        LOCAL vs UTC
+       Keeping the Hardware Clock in a local  timescale  causes  inconsistent
+       daylight saving time results:
+
+       · If  Linux  is  running during a daylight saving time change, the time
+         written to the Hardware Clock will be adjusted for the change.
+
+       · If Linux is NOT running during a daylight  saving  time  change,  the
+         time  read  from  the  Hardware  Clock  will  NOT be adjusted for the
+         change.
+
+       The Hardware Clock on an ISA compatible system keeps only  a  date  and
+       time,  it  has  no  concept of timezone nor daylight saving. Therefore,
+       when hwclock is told that it is in local time, it assumes it is in  the
+       'correct' local time and makes no adjustments to the time read from it.
+
+       Linux handles daylight saving time changes transparently only when the
+       Hardware Clock is kept in the UTC timescale. Doing so is made easy  for
+       system  administrators as hwclock uses local time for its output and as
+       the argument to the --date option.
+
+       POSIX systems, like Linux, are designed to have the System Clock  oper‐
+       ate in the UTC timescale. The Hardware Clock's purpose is to initialize
+       the System Clock, so also keeping it in UTC makes sense.
+
+       Linux does, however, attempt to accommodate the Hardware Clock being in
+       the local timescale. This is primarily for dual-booting with older ver‐
+       sions of MS Windows. From Windows 7 on,  the  RealTimeIsUniversal  reg‐
+       istry key is supposed to be working properly so that its Hardware Clock
+       can be kept in UTC.
 
 
 ---Printer settings not found, printer not working
