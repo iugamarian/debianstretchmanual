@@ -309,7 +309,8 @@ vm.dirty_expire_centisecs = 600
 
 
 ---Dual boot time with Windows is incorrect
-    Solution: Windows writes local time to clock chip, Linux writes UTC time to chip. Make Linux use local time:
+    Solution: Windows writes local time to clock chip, Linux writes UTC time to chip.
+    Ubuntu uses localtime from the factory in order to better dualboot. Debian uses UTC. Make Linux use local time:
         https://wiki.archlinux.org/index.php/time
         https://wiki.archlinux.org/index.php/Network_Time_Protocol_daemon
         su -
@@ -324,11 +325,11 @@ vm.dirty_expire_centisecs = 600
         hwclock -w -l
         hwclock
         date
-        If hwclock is the same as date clock then dont do this also:
+        If hwclock is the same as date clock then don't do this also:
         hwclock -w -u
         hwclock
         date
-        If hwclock is the same as date clock then dont do this also:
+        If hwclock is the same as date clock then don't do this also:
         hwclock --set --date "8/11/2018 23:10:45"
         
         man hwclock
