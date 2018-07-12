@@ -56,6 +56,34 @@ exit 0
 chmod +x /etc/network/if-pre-up.d/iptablesload
 
 
+#### IPTABLES SELECTIVE
+
+https://askubuntu.com/questions/19346/how-to-block-internet-access-for-wine-applications
+
+make a group and become a member of it
+
+sudo -s
+
+groupadd wino
+
+adduser yourusername wino
+
+now enter an iptables rule to block that group from using the internet you can type this on the terminal and hit enter
+
+iptables -A OUTPUT -m owner --gid-owner wino -j REJECT
+
+to make this rule run after each reboo see one page up IPTABLES SAVE
+
+exit
+
+usage example as user:
+
+sg wino "firefox"
+
+sg wino "wine executablename.exe"
+
+yes you need the " " and also type wine before the programs name for .exe .
+
 
 STARTUP APPLICATIONS
 
