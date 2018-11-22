@@ -110,8 +110,8 @@ echo "installing grub"
 grub-install --target=i386-pc --boot-directory=${tmplive}/boot/ ${dev}
 
 echo "installing syslinux"
-dd bs=440 count=1 conv=notrunc if=/usr/lib/syslinux/mbr/gptmbr.bin of=${dev}
-syslinux --install ${dev}2
+dd bs=440 count=1 conv=notrunc if=/usr/lib/syslinux/mbr/mbr.bin of=${dev}
+syslinux --install ${dev}1
 
 echo "fixing isolinux folder/files"
 mv ${tmplive}/isolinux ${tmplive}/syslinux
