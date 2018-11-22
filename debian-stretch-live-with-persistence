@@ -125,7 +125,7 @@ echo "configuring persistence kernel parameter"
 sed --in-place '0,/boot=live/{s/\(boot=live .*\)$/\1 persistence/}' ${tmplive}/boot/grub/grub.cfg ${tmplive}/syslinux/menu.cfg
 
 echo "configuring keyboard layout and locales"
-sed --in-place '0,/boot=live/{s/\(boot=live .*\)$/\1 keyboard-layouts=de locales=en_US.UTF-8,de_DE.UTF-8/}' ${tmplive}/boot/grub/grub.cfg ${tmplive}/syslinux/menu.cfg
+sed --in-place '0,/boot=live/{s/\(boot=live .*\)$/\1 keyboard-layouts=us locales=en_US.UTF-8,de_DE.UTF-8/}' ${tmplive}/boot/grub/grub.cfg ${tmplive}/syslinux/menu.cfg
 
 echo "cleaning up"
 umount ${tmpall}
