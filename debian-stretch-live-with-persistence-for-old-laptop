@@ -43,7 +43,7 @@ sleep 1
 
 echo "creating file systems"
 mkfs.vfat -n LIVE ${dev}1
-mkfs.ext4 -m 0 -F -L persistence -E lazy_itable_init=0,lazy_journal_init=0 ${dev}2
+mkfs.ext4 -m 0 -F -O ^64bit -L persistence -E lazy_itable_init=0,lazy_journal_init=0 ${dev}2
 
 echo "creating temporary mount locations"
 tmp=$(mktemp --tmpdir --directory debianlive.XXXXX)
