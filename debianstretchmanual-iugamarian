@@ -235,13 +235,14 @@ sync
                  by doing textually "killall application", already available on Debian Stretch from the "psmisc" package
 
 ---Linux hangs when a (usually erronated) process asks for more memory than the computer has
-    Solution: In a .conf file in /etc/sysctl.d write (swap more, 32MB only for kernel, less file data in RAM):
+    Solution: In a .conf file in /etc/sysctl.d write (swap more, 64MB only for kernel, less file data in RAM):
         vm.swappiness = 60
-        vm.min_free_kbytes = 32768
+        vm.min_free_kbytes = 65536
         vm.vfs_cache_pressure = 300
 
 ---on a computer power outage you can lose unwritten data and there is a lot of it by default
-    Solution: In a .conf file in /etc/sysctl.d write (max buffer 128 MB, write all that's older than 6 seconds):
+    https://developer.ridgerun.com/wiki/index.php/High_performance_SD_card_tuning_using_the_EXT4_file_system
+    Solution: In a .conf file in /etc/sysctl.d write (max buffer in RAM 128 MB, write all that's older than 6 seconds):
         vm.dirty_bytes = 134217728
         vm.dirty_background_bytes = 134217728
         vm.dirty_writeback_centisecs = 600
